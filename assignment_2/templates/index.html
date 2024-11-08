@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animal and File Upload</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 600px; margin: auto; text-align: center; }
+    .box { margin: 20px; padding: 20px; border: 2px solid #ddd; border-radius: 5px; }
+    #animalImage { max-width: 100%; height: auto; display: none; }
+    #fileInfo { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Select an Animal or Upload a File</h1>
+    
+    <!-- Animal Selection Box -->
+    <div class="box">
+      <h2>Select an Animal</h2>
+      <label><input type="radio" name="animal" value="cat"> Cat</label>
+      <label><input type="radio" name="animal" value="dog"> Dog</label>
+      <label><input type="radio" name="animal" value="elephant"> Elephant</label>
+      <img id="animalImage" src="" alt="Selected Animal">
+    </div>
+
+    <!-- File Upload Box -->
+    <div class="box">
+      <h2>Upload a File</h2>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileUpload" name="file">
+      </form>
+      <div id="fileInfo"></div>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript to handle animal selection and file upload
+    document.querySelectorAll('input[name="animal"]').forEach(radio => {
+      radio.addEventListener('change', function () {
+        fetch('/get_image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ animal: this.value })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.image) {
+            document.getElementById('animalImage').src = data.image;
+            document.getElementById('animalImage').style.display = 'block';
+          }
+        });
+      });
+    });
+
+    document.getElementById('fileUpload').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const formData = new FormData(document.getElementById('uploadForm'));
+        fetch('/upload_file', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.name) {
+            document.getElementById('fileInfo').innerHTML = `
+              <p><strong>File Name:</strong> ${data.name}</p>
+              <p><strong>File Size:</strong> ${data.size} bytes</p>
+              <p><strong>File Type:</strong> ${data.type}</p>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

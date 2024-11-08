@@ -1,0 +1,9 @@
+fastapi
+python-multipart
+uvicorn
+opencv-python
+albumentations
+numpy
+librosa
+soundfile
+matplotlib 
