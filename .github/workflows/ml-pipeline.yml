@@ -35,7 +35,8 @@ jobs:
         python -m unittest discover tests
         
     - name: Upload trained model
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: trained-model
         path: assignment_5/model_mnist_*.pth  # Changed to assignment_5
+        compression-level: maximum
