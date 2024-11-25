@@ -6,18 +6,18 @@ class MNISTModel(nn.Module):
         super(MNISTModel, self).__init__()
         
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3, padding=1),
+            nn.Conv2d(1, 8, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2),
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),
+            nn.Conv2d(8, 16, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2)
         )
         
         self.fc_layers = nn.Sequential(
-            nn.Linear(32 * 7 * 7, 128),
+            nn.Linear(16 * 7 * 7, 64),
             nn.ReLU(),
-            nn.Linear(128, 10)
+            nn.Linear(64, 10)
         )
 
     def forward(self, x):
