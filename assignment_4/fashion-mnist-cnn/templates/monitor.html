@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fashion MNIST Training Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Fashion MNIST Training Monitor</h1>
+        
+        <div class="metrics">
+            <div class="metric-box">
+                <h3>Current Epoch</h3>
+                <p id="epoch">0</p>
+            </div>
+            <div class="metric-box">
+                <h3>Current Loss</h3>
+                <p id="loss">0</p>
+            </div>
+            <div class="metric-box">
+                <h3>Accuracy</h3>
+                <p id="accuracy">0%</p>
+            </div>
+        </div>
+
+        <div class="charts">
+            <div id="lossChart"></div>
+            <div id="accuracyChart"></div>
+        </div>
+
+        <div id="results" style="display: none;">
+            <h2>Test Results</h2>
+            <img id="resultsImage" src="" alt="Test Results">
+        </div>
+    </div>
+
+    <script>
+        let lossData = [];
+        let accuracyData = [];
+        let epochs = [];
+
+        function updateCharts() {
+            Plotly.newPlot('lossChart', [{
+                y: lossData,
+                type: 'scatter',
+                name: 'Loss'
+            }], {
+                title: 'Training Loss'
+            });
+
+            Plotly.newPlot('accuracyChart', [{
+                y: accuracyData,
+                type: 'scatter',
+                name: 'Accuracy'
+            }], {
+                title: 'Training Accuracy'
+            });
+        }
+
+        function updateMetrics() {
+            fetch('/get_training_state')
+                .then(response => response.json())
+                .then(data => {
+                    data = JSON.parse(data);
+                    document.getElementById('epoch').textContent = data.epoch;
+                    document.getElementById('loss').textContent = data.loss.toFixed(4);
+                    document.getElementById('accuracy').textContent = data.accuracy.toFixed(2) + '%';
+                    
+                    lossData.push(data.loss);
+                    accuracyData.push(data.accuracy);
+                    epochs.push(data.epoch);
+                    
+                    updateCharts();
+                });
+
+            fetch('/get_results')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.image) {
+                        document.getElementById('results').style.display = 'block';
+                        document.getElementById('resultsImage').src = 'data:image/png;base64,' + data.image;
+                    }
+                });
+        }
+
+        setInterval(updateMetrics, 1000);
+    </script>
+</body>
+</html> 

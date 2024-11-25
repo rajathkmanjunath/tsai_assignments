@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Floating Video Speed Control and Email Cleanup",
+  "version": "1.0",
+  "description": "Control video speed and clean up Gmail drafts using ChatGPT",
+  "permissions": [
+    "activeTab",
+    "<all_urls>",
+    "https://mail.google.com/*",
+    "https://api.openai.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    "floating-window.html"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
+}
