@@ -24,7 +24,7 @@ def train_model():
     # Initialize model
     model = MNISTModel().to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.001)
     
     # Training
     model.train()
@@ -46,11 +46,13 @@ def train_model():
         pbar.set_postfix({'loss': f'{running_loss:.4f}'})
     
     # Save model with timestamp
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    save_path = f'model_mnist_{timestamp}.pth'
-    torch.save(model.state_dict(), save_path)
-    print(f"\nModel saved as {save_path}")
-    return save_path
+    os.makedirs('models', exist_ok=True)  # Create models directory if it doesn't exist
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')    
+    # Also save as latest for easy reference
+    latest_path = os.path.join('models', 'model_mnist_latest.pth')
+    torch.save(model.state_dict(), latest_path)
+    print(f"Also saved as {latest_path}")
+    return latest_path
 
 if __name__ == '__main__':
     train_model() 
