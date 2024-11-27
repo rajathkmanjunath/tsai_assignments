@@ -9,6 +9,7 @@ class TestModel(unittest.TestCase):
         
     def test_parameter_count(self):
         param_count = count_parameters(self.model)
+        print(f"Model has {param_count} parameters")
         self.assertLess(param_count, 25000, f"Model has {param_count} parameters, should be < 100000")
         
     def test_input_shape(self):
@@ -22,6 +23,7 @@ class TestModel(unittest.TestCase):
     def test_accuracy(self):
         self.model.load_state_dict(torch.load('models/model_mnist_latest.pth'))
         accuracy = evaluate_model(self.model)
+        print(f"Model accuracy: {accuracy:.2f}")
         self.assertGreater(accuracy, 0.95, f"Model accuracy {accuracy:.2f} should be > 0.95")
 
 if __name__ == '__main__':
