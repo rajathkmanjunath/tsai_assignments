@@ -74,3 +74,7 @@ The trained model is saved as `model_mnist_latest.pth` in the `models/` director
 ## Testing
 
 Tests are located in the `tests/` directory and are automatically run as part of the CI/CD pipeline.
+
+# Your Project Name
+
+[![Assignment 5](https://github.com/rajathkmanjunath/tsai_assignments/actions/workflows/ml-pipeline.yml/badge.svg)](https://github.com/rajathkmanjunath/tsai_assignments/actions/workflows/ml-pipeline.yml)
