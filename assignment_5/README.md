@@ -77,4 +77,4 @@ Tests are located in the `tests/` directory and are automatically run as part of
 
 # Your Project Name
 
-[![Assignment 5](https://github.com/rajathkmanjunath/tsai_assignments/actions/workflows/ml-pipeline.yml/badge.svg)](https://github.com/rajathkmanjunath/tsai_assignments/actions/workflows/ml-pipeline.yml)
+[![Assignment 5](https://github.com/rajathkmanjunath/tsai_assignments/actions/workflows/ml-pipeline.yml/badge.svg)](https://github.com/rajathkmanjunath/tsai_assignments/actions/workflows/assignment_5.yml)

@@ -1,0 +1,56 @@
+name: Model Evaluation
+
+on: [push]
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision tqdm
+
+      - name: Train and evaluate model
+        id: train
+        run: |
+          cd assignment_6
+          # Create a script to extract and save metrics
+          python train.py | tee training_output.txt
+
+          # Extract metrics and save them as environment variables
+          echo "ACCURACY=$(grep 'Final Accuracy:' training_output.txt | tail -n1 | awk '{print $3}' | sed 's/%//')" >> $GITHUB_ENV
+          echo "PARAMS=$(grep 'Total parameters:' training_output.txt | tail -n1 | awk '{print $3}')" >> $GITHUB_ENV
+
+      - name: Check model requirements
+        run: |
+          echo "Accuracy: ${{ env.ACCURACY }}%"
+          echo "Parameters: ${{ env.PARAMS }}"
+
+          if (( $(echo "${{ env.ACCURACY }} < 99.4" | bc -l) )); then
+            echo "Accuracy requirement not met: ${{ env.ACCURACY }}% < 99.4%"
+            exit 1
+          fi
+
+          if (( ${{ env.PARAMS }} > 20000 )); then
+            echo "Parameter requirement not met: ${{ env.PARAMS }} > 20000"
+            exit 1
+          fi
+
+      - name: Upload training logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: training-logs
+          path: |
+            assignment_6/training.log
+            assignment_6/best_model.pth
+            assignment_6/training_output.txt
+          retention-days: 90
